@@ -248,7 +248,12 @@ final class FileManagerService {
         }
         
         do {
-            try pdfData.write(to: fileURL)
+            if let data = pdfDocument.dataRepresentation() {
+                if !FileManager.default.fileExists(atPath: directoryURL.path) {
+                    try FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+                }
+                try data.write(to: fileURL)
+
             print("PDF created successfully: \(fileURL)")
             
             let fileAttributes = try? FileManager.default.attributesOfItem(atPath: fileURL.path)
@@ -264,7 +269,10 @@ final class FileManagerService {
                     url: fileURL.lastPathComponent
                 )
                 completion?(fileDTO)
-            
+            } else {
+                print("[Error] Failed to generate PDF data.")
+                completion?(nil)
+            }
         } catch {
             print("[Error] Failed to save PDF: \(error.localizedDescription)")
             completion?(nil)
@@ -289,7 +297,7 @@ final class FileManagerService {
 
         let pdfDocument = PDFDocument()
 
-        for (index, url) in urls.enumerated() {
+        for (_, url) in urls.enumerated() {
             
             let fileType = getFileType(from: url)
             if fileType == FileType.PDF.rawValue {
