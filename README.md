@@ -26,7 +26,7 @@ Additionally, all generated PDFs are saved in the **PDF Converter** folder for q
 ## 📦 Technologies
 - SwiftUI + SUINavigation  
 - CoreData (for file history persistence)  
-- UIKit integration for photo handling (if used)  
+- UIKit integration for photo handling 
 
 ---
 
